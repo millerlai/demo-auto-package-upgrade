@@ -1,3 +1,4 @@
+import json
 from datetime import datetime
 
 import pytest
@@ -30,9 +31,11 @@ def test_serialize_user_uses_dict():
 
 def test_serialize_user_json():
     out = UserOut(id=1, name="Ada", email="a@b.c", created_at=datetime(2024, 1, 1))
-    assert '"id": 1' in serialize_user_json(out)
+    # Parse instead of matching raw text: pydantic v2 emits compact JSON, so the
+    # exact spacing differs from v1 but the serialized value is what matters.
+    assert json.loads(serialize_user_json(out))["id"] == 1
 
 
 def test_config_orm_mode_enabled():
-    # v1 surfaces orm_mode via __config__.
-    assert UserOut.__config__.orm_mode is True
+    # v2 surfaces the (renamed) orm_mode via model_config["from_attributes"].
+    assert UserOut.model_config["from_attributes"] is True
