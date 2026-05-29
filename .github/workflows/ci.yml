@@ -76,7 +76,8 @@ jobs:
           version: 9
       - uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          # Node 22: `node --test` glob support (dist/test/**/*.test.js) needs >=21
+          node-version: "22"
       - run: pnpm install --no-frozen-lockfile
       - run: pnpm test
 
