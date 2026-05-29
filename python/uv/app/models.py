@@ -6,7 +6,7 @@ in Pydantic v2 (which FastAPI >=0.100 pulls in), so an upgrade breaks the code.
 from datetime import datetime
 from typing import Optional
 
-from pydantic import BaseModel, validator
+from pydantic import BaseModel, ConfigDict, field_validator
 
 
 class UserIn(BaseModel):
@@ -14,15 +14,18 @@ class UserIn(BaseModel):
     email: str
     age: Optional[int] = None
 
-    # v1: @validator. In v2 this is removed in favour of @field_validator.
-    @validator("email")
+    # v2: @field_validator replaces v1 @validator; needs @classmethod.
+    @field_validator("email")
+    @classmethod
     def email_must_contain_at(cls, v: str) -> str:
         if "@" not in v:
             raise ValueError("invalid email")
         return v.lower()
 
-    # v1: @validator(..., always=True). `always=` no longer exists in v2.
-    @validator("age", always=True)
+    # v2: @field_validator; v1's `always=` is gone (validators run on
+    # supplied values, which is what this check needs).
+    @field_validator("age")
+    @classmethod
     def age_non_negative(cls, v: Optional[int]) -> Optional[int]:
         if v is not None and v < 0:
             raise ValueError("age must be >= 0")
@@ -30,22 +33,20 @@ class UserIn(BaseModel):
 
 
 class UserOut(BaseModel):
+    # v2: `class Config: orm_mode` -> model_config + `from_attributes`.
+    model_config = ConfigDict(from_attributes=True)
+
     id: int
     name: str
     email: str
     created_at: datetime
 
-    class Config:
-        # v1 config. In v2 this becomes `model_config = ConfigDict(...)`
-        # and `orm_mode` is renamed to `from_attributes`.
-        orm_mode = True
-
 
 def serialize_user(user: UserOut) -> dict:
-    # v1: .dict(). Removed in v2 -> .model_dump().
-    return user.dict()
+    # v2: .dict() -> .model_dump().
+    return user.model_dump()
 
 
 def serialize_user_json(user: UserOut) -> str:
-    # v1: .json(). Removed in v2 -> .model_dump_json().
-    return user.json()
+    # v2: .json() -> .model_dump_json().
+    return user.model_dump_json()

@@ -4,10 +4,10 @@ version = "0.1.0"
 description = "Demo: FastAPI + Pydantic v1 + urllib3 v1 service that breaks on upgrade"
 requires-python = ">=3.10,<3.13"
 dependencies = [
-    "fastapi==0.95.2",
-    "pydantic==1.10.13",
-    "urllib3==1.26.18",
-    "starlette==0.27.0",
+    "fastapi==0.136.3",
+    "pydantic==2.13.4",
+    "urllib3==2.7.0",
+    "starlette==1.2.0",
 ]
 
 [dependency-groups]

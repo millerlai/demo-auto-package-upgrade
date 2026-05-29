@@ -30,9 +30,10 @@ def test_serialize_user_uses_dict():
 
 def test_serialize_user_json():
     out = UserOut(id=1, name="Ada", email="a@b.c", created_at=datetime(2024, 1, 1))
-    assert '"id": 1' in serialize_user_json(out)
+    # v2 model_dump_json() emits compact JSON (no space after colon).
+    assert '"id":1' in serialize_user_json(out)
 
 
 def test_config_orm_mode_enabled():
-    # v1 surfaces orm_mode via __config__.
-    assert UserOut.__config__.orm_mode is True
+    # v2 surfaces config via model_config; orm_mode -> from_attributes.
+    assert UserOut.model_config["from_attributes"] is True

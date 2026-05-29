@@ -8,12 +8,12 @@ from urllib3.util.retry import Retry
 
 
 def build_retry() -> Retry:
-    # v1.26: `method_whitelist`. Removed in urllib3 2.x -> `allowed_methods`.
+    # urllib3 2.x: `method_whitelist` removed -> `allowed_methods`.
     return Retry(
         total=3,
         backoff_factor=0.2,
         status_forcelist=[502, 503, 504],
-        method_whitelist=["GET", "HEAD"],
+        allowed_methods=["GET", "HEAD"],
     )
 
 
@@ -22,5 +22,5 @@ def build_pool() -> PoolManager:
 
 
 def allowed_methods(retry: Retry) -> frozenset:
-    # v1.26 exposes the configured methods via `.method_whitelist`.
-    return retry.method_whitelist
+    # urllib3 2.x exposes the configured methods via `.allowed_methods`.
+    return retry.allowed_methods
