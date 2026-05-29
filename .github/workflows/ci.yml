@@ -1,0 +1,96 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  python-uv:
+    name: python/uv (FastAPI + Pydantic v1)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: python/uv
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+      - run: uv sync --dev
+      - run: uv run pytest
+
+  python-poetry:
+    name: python/poetry (SQLAlchemy 1.4)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: python/poetry
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pipx install poetry
+      - run: poetry install
+      - run: poetry run pytest
+
+  python-pip:
+    name: python/pip (pandas 1.5)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: python/pip
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install -r requirements-dev.txt
+      - run: pytest
+
+  javascript-npm:
+    name: javascript/npm (axios 0.27)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: javascript/npm
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      # lockfile is gitignored, so install instead of ci
+      - run: npm install
+      - run: npm test
+
+  typescript-pnpm:
+    name: typescript/pnpm (chalk v4)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: typescript/pnpm
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - run: pnpm install --no-frozen-lockfile
+      - run: pnpm test
+
+  go-modules:
+    name: go/go-modules (golang-jwt v4)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: go/go-modules
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: "1.21"
+      # go.sum is gitignored, regenerate it
+      - run: go mod tidy
+      - run: go test ./...
