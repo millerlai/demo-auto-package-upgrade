@@ -1,0 +1,22 @@
+# Demo 對照筆記：刻意不進 repo，讓升級工具/LLM 只看到 code + 套件依賴檔
+**/BreakingInformation.md
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.uv/
+uv.lock
+.pytest_cache/
+*.egg-info/
+
+# Node / TS
+node_modules/
+dist/
+package-lock.json
+pnpm-lock.yaml
+yarn.lock
+
+# Go
+go.sum

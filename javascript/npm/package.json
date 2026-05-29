@@ -1,0 +1,12 @@
+{
+  "name": "demo-npm-axios",
+  "version": "0.1.0",
+  "description": "Demo: axios 0.27 helpers that break on the 1.x upgrade",
+  "main": "src/fetcher.js",
+  "scripts": {
+    "test": "node --test"
+  },
+  "dependencies": {
+    "axios": "0.27.2"
+  }
+}

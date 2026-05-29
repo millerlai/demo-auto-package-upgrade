@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "demo-poetry-sqlalchemy"
+version = "0.1.0"
+description = "Demo: SQLAlchemy 1.4 data layer that breaks on the 2.0 upgrade"
+authors = ["demo <demo@example.com>"]
+packages = [{ include = "store" }]
+
+[tool.poetry.dependencies]
+python = ">=3.9,<4.0"
+SQLAlchemy = "1.4.49"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "7.4.4"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
