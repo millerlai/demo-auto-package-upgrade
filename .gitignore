@@ -7,16 +7,10 @@ __pycache__/
 .venv/
 venv/
 .uv/
-uv.lock
 .pytest_cache/
 *.egg-info/
 
 # Node / TS
 node_modules/
 dist/
-package-lock.json
-pnpm-lock.yaml
-yarn.lock
 
-# Go
-go.sum
