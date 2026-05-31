@@ -15,8 +15,13 @@
 | `python/poetry/` | poetry | SQLAlchemy 1.4 → 2.0 | `declarative_base` 路徑、`engine.execute(str)`、`query.get()` |
 | `python/pip/` | pip | pandas 1.5 → 2.0 | `DataFrame.append()`、`iteritems()` |
 | `javascript/npm/` | npm | axios 0.27 → 1.x | `axios.all()` / `axios.spread()`、`paramsSerializer` |
+| `javascript/yarn/` | yarn | **transitive 卡住**：`tough-cookie` 2.5 → 4.1.3+（CVE-2023-26136），被 `request@2.88.2`（deprecated）的 `~2.5.0` 擋住 | 中間套件 A 無新版可放行 B；需 yarn `resolutions` 覆蓋 |
 | `typescript/pnpm/` | pnpm | chalk 4 → 5 (ESM-only) | CJS 預設匯入、`chalk.keyword()` |
 | `go/go-modules/` | go modules | golang-jwt v4 → v5 | major path `/v4→/v5`、`StandardClaims`、`Token.Valid` |
+
+> `javascript/yarn/` 與其他情境**不同類**：它不是「升級後 API break」，而是
+> 「主程式直接用 A，A 依賴的 B（主程式沒直接 import）有 CVE 要升級，但 A 沒有任何新版放寬對 B 的限制」。
+> baseline 綠、套用 `resolutions` 覆蓋後也應維持綠——考驗工具能否**辨識被中間套件卡住的 transitive，並改用覆蓋而非升級 A**。
 
 ## 跑各情境的測試
 
@@ -32,6 +37,10 @@ cd python/pip && pip install -r requirements-dev.txt && pytest
 
 # javascript/npm
 cd javascript/npm && npm install && npm test
+
+# javascript/yarn（目標 PM 為 yarn；未裝 yarn 可用 npm 代驗）
+cd javascript/yarn && yarn install && yarn test
+#   檢視被卡住的 transitive： npm ls tough-cookie  → tough-cookie@2.5.0
 
 # typescript/pnpm
 cd typescript/pnpm && pnpm install && pnpm test
