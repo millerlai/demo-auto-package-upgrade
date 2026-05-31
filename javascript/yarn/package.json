@@ -1,0 +1,12 @@
+{
+  "name": "demo-yarn-request",
+  "version": "0.1.0",
+  "description": "Demo: request@2.88.2 (deprecated) pins tough-cookie ~2.5.0, blocking the CVE-2023-26136 transitive upgrade",
+  "main": "src/client.js",
+  "scripts": {
+    "test": "node --test"
+  },
+  "dependencies": {
+    "request": "2.88.2"
+  }
+}
