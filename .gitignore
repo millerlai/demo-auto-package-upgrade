@@ -9,6 +9,7 @@ venv/
 .uv/
 .pytest_cache/
 *.egg-info/
+.claude/
 
 # Node / TS
 node_modules/
